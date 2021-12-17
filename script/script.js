@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
         setInterval(function() { if (timerSeconds.textContent = '00') { updateClock() } }, 1000);
     };
-    countTimer('15 dec 2021');
+    countTimer('18 dec 2021');
 
     //menu
     const toggleMenu = () => {
@@ -111,6 +111,7 @@ window.addEventListener('DOMContentLoaded', function() {
         }
 
         document.body.addEventListener('click', (event) => {
+            event.preventDefault();
             let target = event.target;
 
             if (target === closeBtn) {
@@ -287,4 +288,44 @@ window.addEventListener('DOMContentLoaded', function() {
         startSlide(1500);
     };
     slider();
+
+    //validation calc
+    const validate = () => {
+        const calcBlock = document.querySelector('.calc-block');
+
+        calcBlock.addEventListener('input', (event) => {
+            let target = event.target;
+            if (!target.matches('.calc-square, .calc-count, .calc-day')) return;
+            else {
+                target.value = target.value.replace(/\D/g, '');
+            }
+        });
+
+    };
+    validate();
+
+    //change team photos
+    const changePhoto = () => {
+        const command = document.getElementById('command');
+        let attributeValue;
+
+
+        command.addEventListener('mouseover', (event) => {
+            let target = event.target;
+            if (!target.matches('.command__photo')) return;
+            else {
+                attributeValue = target.getAttribute('src');
+                console.log(attributeValue);
+                target.setAttribute('src', target.getAttribute('data-img'));
+            }
+        });
+        command.addEventListener('mouseout', (event) => {
+            let target = event.target;
+            if (!target.matches('.command__photo')) return;
+            else {
+                target.setAttribute('src', attributeValue);
+            }
+        });
+    };
+    changePhoto();
 });
