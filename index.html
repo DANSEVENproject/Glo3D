@@ -391,7 +391,45 @@
     </div>
 
     <script src="script/script.js"></script>
-
+    <script src="script/maskPhone.js"></script>
 </body>
+<script src="plugins/validator/validator.js"></script>
+<script>
+    const validate = (selectorPhone, selectorId, selectorEmail, selectorName, selectorMessage) => {
+        maskPhone(`#${selectorPhone}`, '+375 (__) ___-__-__');
+        const valid = new Validator({
+            selector: selectorId,
+            pattern: {
+                [selectorPhone]: /\+375 \(\d{2}\) \d{3}\-\d{2}\-\d{2}/,
+                [selectorEmail]: /^\w+@\w+\.\w{2,}$/,
+                [selectorName]: /^[А-я]+$/,
+                [selectorMessage]: /^[А-я]+$/
+            },
+            method: {
+                [selectorPhone]: [
+                    ['notEmpty'],
+                    ['pattern', [selectorPhone]]
+                ],
+                [selectorEmail]: [
+                    ['notEmpty'],
+                    ['pattern', [selectorEmail]]
+                ],
+                [selectorName]: [
+                    ['notEmpty'],
+                    ['pattern', [selectorName]]
+                ],
+                [selectorMessage]: [
+                    ['notEmpty'],
+                    ['pattern', [selectorMessage]]
+                ],
+            }
+        });
+
+        valid.init();
+    }
+    validate('form1-phone', '#form1', 'form1-email', 'form1-name');
+    validate('form2-phone', '#form2', 'form2-email', 'form2-name', 'form2-message');
+    validate('form3-phone', '#form3', 'form3-email', 'form3-name');
+</script>
 
 </html>
