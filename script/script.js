@@ -2,10 +2,17 @@ window.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
     //timer
-    const countTimer = (deadline) => {
+    const countTimer = () => {
         const timerHours = document.querySelector('#timer-hours'),
             timerMinutes = document.querySelector('#timer-minutes'),
             timerSeconds = document.querySelector('#timer-seconds');
+
+        const arrMonth = (i) => {
+            const arr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sen', 'oct', 'nov', 'dec'];
+            return arr[i];
+        };
+        const date = new Date(),
+            deadline = `${date.getDate() + 1} ${arrMonth(date.getMonth())} ${date.getFullYear()}`;
 
         const getTimeRemaining = () => {
             let DateStop = new Date(deadline).getTime(),
@@ -40,7 +47,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
         setInterval(function() { if (timerSeconds.textContent = '00') { updateClock() } }, 1000);
     };
-    countTimer('18 dec 2021');
+    countTimer();
 
     //menu
     const toggleMenu = () => {
@@ -112,7 +119,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
         document.body.addEventListener('click', (event) => {
             event.preventDefault();
-            let target = event.target;
+            const target = event.target;
 
             if (target === closeBtn) {
                 HandlerMenu();
@@ -150,7 +157,7 @@ window.addEventListener('DOMContentLoaded', function() {
             });
         });
         popup.addEventListener('click', (event) => {
-            let target = event.target;
+            const target = event.target;
             if (target.classList.contains('popup-close')) {
                 popup.style.display = 'none'
             } else {
@@ -171,7 +178,7 @@ window.addEventListener('DOMContentLoaded', function() {
             tabContent = document.querySelectorAll('.service-tab');
 
         const toggleTabContent = (index) => {
-            for (let i = 0; i < tabContent.length; i++) {
+            tabContent.forEach((item, i) => {
                 (index === i) ? (
                     tab[i].classList.add('active'),
                     tabContent[i].classList.remove('d-none')
@@ -179,7 +186,7 @@ window.addEventListener('DOMContentLoaded', function() {
                     tab[i].classList.remove('active'),
                     tabContent[i].classList.add('d-none')
                 )
-            }
+            });
         };
 
         tabHeader.addEventListener('click', (event) => {
@@ -207,11 +214,11 @@ window.addEventListener('DOMContentLoaded', function() {
             currentSlide = 0;
 
         const addSliderDots = () => {
-            for (let i = 0; i < slide.length; i++) {
+            slide.forEach(() => {
                 const liDot = document.createElement('li');
                 liDot.classList.add('dot');
                 ulDots.insertAdjacentElement('beforeend', liDot);
-            }
+            });
             dot = document.querySelectorAll('.dot');
         };
         addSliderDots();
@@ -244,7 +251,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
         slider.addEventListener('click', (event) => {
             event.preventDefault();
-            let target = event.target;
+            const target = event.target;
 
             if (!target.matches('#arrow-right, #arrow-left, .dot')) {
                 return;
@@ -390,16 +397,15 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
         command.addEventListener('mouseover', (event) => {
-            let target = event.target;
+            const target = event.target;
             if (!target.matches('.command__photo')) return;
             else {
                 attributeValue = target.getAttribute('src');
-                console.log(attributeValue);
                 target.setAttribute('src', target.getAttribute('data-img'));
             }
         });
         command.addEventListener('mouseout', (event) => {
-            let target = event.target;
+            const target = event.target;
             if (!target.matches('.command__photo')) return;
             else {
                 target.setAttribute('src', attributeValue);

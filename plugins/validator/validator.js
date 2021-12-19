@@ -1,8 +1,8 @@
 class Validator {
-    constructor({ selector, pattern = {}, method }) {
+    constructor({ selector, pattern = {}, method }) { //принимает параметры от пользователя для дальнейшей работы
         this.form = document.querySelector(selector);
-        this.pattern = pattern;
-        this.method = method;
+        this.pattern = pattern; //кастомные шаблоны от пользователя
+        this.method = method; //какие поля должны валидироваться и их свойства
         this.elementsForm = [...this.form.elements].filter(item => {
             return item.tagName.toLowerCase() !== 'button' &&
                 item.type !== 'button';
@@ -10,7 +10,7 @@ class Validator {
         this.error = new Set();
     }
 
-    init() {
+    init() { //инициализация
         this.applyStyle();
         this.setPattern();
         this.elementsForm.forEach(elem => elem.addEventListener('change', this.checkIt.bind(this)));
@@ -22,7 +22,7 @@ class Validator {
         });
     }
 
-    isValid(elem) {
+    isValid(elem) { // проверка валидации, согласно паттернам и пустоте элемента
         const validatorMethod = {
             notEmpty(elem) {
                 if (elem.value.trim() === '') {
@@ -57,7 +57,7 @@ class Validator {
         )
     }
 
-    showError(elem) {
+    showError(elem) { //сообщение об ошибке
         elem.classList.remove('success');
         elem.classList.add('error');
         if (elem.nextElementSibling && elem.nextElementSibling.classList.contains('validator-error')) {
@@ -69,7 +69,7 @@ class Validator {
         elem.insertAdjacentElement('afterend', errorDiv);
     }
 
-    showSuccess(elem) {
+    showSuccess(elem) { //сообщение об успешном вводе
         elem.classList.remove('error');
         elem.classList.add('success');
         if (elem.nextElementSibling && elem.nextElementSibling.classList.contains('validator-error')) {
@@ -77,7 +77,7 @@ class Validator {
         }
     }
 
-    applyStyle() {
+    applyStyle() { //добавляет стили в html
         const style = document.createElement('style');
         style.textContent = `
         input.success {
@@ -100,6 +100,7 @@ class Validator {
         document.head.appendChild(style);
     }
 
+    //дефолтные паттерны
     defaultPattern(sel, regexp) {
         if (!this.pattern[sel]) {
             this.pattern[sel] = regexp;
