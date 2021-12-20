@@ -118,7 +118,6 @@ window.addEventListener('DOMContentLoaded', function() {
         }
 
         document.body.addEventListener('click', (event) => {
-            event.preventDefault();
             const target = event.target;
 
             if (target === closeBtn) {
@@ -157,7 +156,7 @@ window.addEventListener('DOMContentLoaded', function() {
             });
         });
         popup.addEventListener('click', (event) => {
-            const target = event.target;
+            let target = event.target;
             if (target.classList.contains('popup-close')) {
                 popup.style.display = 'none'
             } else {
@@ -395,7 +394,6 @@ window.addEventListener('DOMContentLoaded', function() {
         const command = document.getElementById('command');
         let attributeValue;
 
-
         command.addEventListener('mouseover', (event) => {
             const target = event.target;
             if (!target.matches('.command__photo')) return;
@@ -413,4 +411,104 @@ window.addEventListener('DOMContentLoaded', function() {
         });
     };
     changePhoto();
+
+    //validation
+    const validate = () => {
+        const formPhone = document.querySelectorAll('.form-phone'),
+            formName = document.querySelectorAll('.form-name'),
+            formMessage = document.getElementById('form2-message');
+
+        formPhone.forEach(item => {
+            item.addEventListener('input', () => {
+                item.value = item.value.replace(/[^+]\D/g, '');
+            });
+        });
+        formMessage.addEventListener('input', () => {
+            formMessage.value = formMessage.value.replace(/[А-я0-9]/g, '');
+        });
+        formName.forEach(item => {
+            item.addEventListener('input', () => {
+                item.value = item.value.replace(/[А-я0-9]/g, '');
+            });
+        });
+    };
+    validate();
+
+    //send-ajax-form
+    const sendForm = () => {
+        const errorMessage = 'Что-то пошло не так..',
+            loadMessage = 'Загрузка..',
+            successMessage = 'Спасибо, мы скоро с вами свяжемся!';
+
+        const forms = [...document.forms];
+
+        const statusMessage = document.createElement('div');
+        statusMessage.classList.add('message-form');
+        statusMessage.style.cssText = `font-size: 2rem;`;
+        let transitionInterval, count = 0;
+
+        const animationOpacity = () => {
+            transitionInterval = requestAnimationFrame(animationOpacity);
+            count < 1 ? (
+                count += 0.01,
+                statusMessage.style.opacity = `${count}`
+            ) : (
+                cancelAnimationFrame(transitionInterval)
+            )
+
+        };
+        const opacityListener = (content) => {
+            statusMessage.textContent = content;
+            count === 0 ? (
+                requestAnimationFrame(animationOpacity)
+            ) : (
+                count === 0,
+                cancelAnimationFrame(transitionInterval)
+            )
+        };
+
+        forms.forEach(item => {
+            item.addEventListener('submit', (event) => {
+                event.preventDefault();
+                item.appendChild(statusMessage);
+                opacityListener(loadMessage);
+
+                const formData = new FormData(item);
+                let body = {};
+                formData.forEach((value, key) => {
+                    body[key] = value;
+                });
+                postData(body,
+                    () => {
+                        opacityListener(successMessage);
+                        for (let i = 0; i < item.length; i++) {
+                            if (item[i].tagName.toLowerCase() !== 'button') {
+                                item[i].value = '';
+                            }
+                        }
+                    },
+                    (error) => {
+                        opacityListener(errorMessage);
+                        console.error(error);
+                    });
+            });
+        })
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) return;
+                (request.status === 200) ? (
+                    outputData()
+                ) : (
+                    errorData(request.status)
+                )
+            });
+
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/JSON');
+            request.send(JSON.stringify(body));
+        }
+
+    };
+    sendForm();
 });
