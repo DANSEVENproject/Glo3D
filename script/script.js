@@ -467,6 +467,24 @@ window.addEventListener('DOMContentLoaded', function() {
             )
         };
 
+        const postData = (body) => {
+            return new Promise((resolve, rejected) => {
+                const request = new XMLHttpRequest();
+                request.addEventListener('readystatechange', () => {
+                    if (request.readyState !== 4) return;
+                    (request.status === 200) ? (
+                        resolve()
+                    ) : (
+                        rejected(request.status)
+                    )
+                });
+
+                request.open('POST', './server.php');
+                request.setRequestHeader('Content-Type', 'application/JSON');
+                request.send(JSON.stringify(body));
+            });
+        };
+
         forms.forEach(item => {
             item.addEventListener('submit', (event) => {
                 event.preventDefault();
@@ -478,37 +496,24 @@ window.addEventListener('DOMContentLoaded', function() {
                 formData.forEach((value, key) => {
                     body[key] = value;
                 });
-                postData(body,
-                    () => {
+
+                postData(body)
+                    .then(() => {
+                        count = 0;
                         opacityListener(successMessage);
                         for (let i = 0; i < item.length; i++) {
                             if (item[i].tagName.toLowerCase() !== 'button') {
                                 item[i].value = '';
                             }
                         }
-                    },
-                    (error) => {
+                    })
+                    .catch((error) => {
+                        count = 0;
                         opacityListener(errorMessage);
                         console.error(error);
                     });
             });
-        })
-        const postData = (body, outputData, errorData) => {
-            const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                if (request.readyState !== 4) return;
-                (request.status === 200) ? (
-                    outputData()
-                ) : (
-                    errorData(request.status)
-                )
-            });
-
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'application/JSON');
-            request.send(JSON.stringify(body));
-        }
-
+        });
     };
     sendForm();
 });
