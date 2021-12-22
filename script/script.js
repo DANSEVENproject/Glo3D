@@ -467,38 +467,18 @@ window.addEventListener('DOMContentLoaded', function() {
             )
         };
 
-        const postData = (body) => {
-            return new Promise((resolve, rejected) => {
-                const request = new XMLHttpRequest();
-                request.addEventListener('readystatechange', () => {
-                    if (request.readyState !== 4) return;
-                    (request.status === 200) ? (
-                        resolve()
-                    ) : (
-                        rejected(request.status)
-                    )
-                });
-
-                request.open('POST', './server.php');
-                request.setRequestHeader('Content-Type', 'application/JSON');
-                request.send(JSON.stringify(body));
-            });
-        };
-
         forms.forEach(item => {
             item.addEventListener('submit', (event) => {
                 event.preventDefault();
                 item.appendChild(statusMessage);
+                const formData = new FormData(item);
                 opacityListener(loadMessage);
 
-                const formData = new FormData(item);
-                let body = {};
-                formData.forEach((value, key) => {
-                    body[key] = value;
-                });
-
-                postData(body)
-                    .then(() => {
+                postData(formData)
+                    .then((response) => {
+                        if (response.status !== 200) {
+                            throw new Error('status network not 200');
+                        }
                         count = 0;
                         opacityListener(successMessage);
                         for (let i = 0; i < item.length; i++) {
@@ -514,6 +494,15 @@ window.addEventListener('DOMContentLoaded', function() {
                     });
             });
         });
+        const postData = (formData) => {
+            return fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/JSON'
+                },
+                body: formData
+            });
+        };
     };
     sendForm();
 });
