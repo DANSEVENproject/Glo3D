@@ -12,15 +12,23 @@ const calc = (price = 100) => {
         let total = 0,
             countValue = 1,
             dayValue = 1;
+
+        const MULTIPLACATION_PERCENTAGE_1 = 2,
+            MULTIPLACATION_PERCENTAGE_2 = 1.5,
+            LIMIT_DAY_PROCENT_1 = 5,
+            LIMIT_DAY_PROCENT_2 = 10,
+            MAX_LIMIT_TOTAL_ANIMATION = 10000,
+            MIN_LIMIT_TOTAL_ANIMATION = 3000;
+
         const typeValue = calcType.options[calcType.selectedIndex].value,
             squareValue = +calcSquare.value;
 
         const animation = () => {
             animationFrame = requestAnimationFrame(animation);
             if (countAnimation < total) {
-                if (total >= 3000 && total < 10000) {
+                if (total >= MIN_LIMIT_TOTAL_ANIMATION && total < MAX_LIMIT_TOTAL_ANIMATION) {
                     countAnimation += 50;
-                } else if (total >= 10000) {
+                } else if (total >= MAX_LIMIT_TOTAL_ANIMATION) {
                     countAnimation += 200;
                 } else {
                     countAnimation += 20;
@@ -34,9 +42,9 @@ const calc = (price = 100) => {
         const animationReset = () => {
             animationFrame = requestAnimationFrame(animationReset);
             if (countAnimation > total) {
-                if (countAnimation >= 3000 && countAnimation < 10000) {
+                if (countAnimation >= MIN_LIMIT_TOTAL_ANIMATION && countAnimation < MAX_LIMIT_TOTAL_ANIMATION) {
                     countAnimation -= 50;
-                } else if (countAnimation >= 10000) {
+                } else if (countAnimation >= MAX_LIMIT_TOTAL_ANIMATION) {
                     countAnimation -= 200;
 
                 } else {
@@ -52,10 +60,10 @@ const calc = (price = 100) => {
             countValue += (calcCount.value - 1) / 10;
         }
 
-        if (calcDay.value && calcDay.value < 5) {
-            dayValue *= 2
-        } else if (calcDay.value && calcDay.value < 10) {
-            dayValue *= 1.5;
+        if (calcDay.value && calcDay.value < LIMIT_DAY_PROCENT_1) {
+            dayValue *= MULTIPLACATION_PERCENTAGE_1;
+        } else if (calcDay.value && calcDay.value < LIMIT_DAY_PROCENT_2) {
+            dayValue *= MULTIPLACATION_PERCENTAGE_2;
         }
 
         if (typeValue && squareValue) {

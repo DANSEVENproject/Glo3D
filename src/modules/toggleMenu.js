@@ -11,8 +11,11 @@ const toggleMenu = () => {
         heightCommand = document.querySelector('.command').getBoundingClientRect().top,
         heightConnect = document.querySelector('.connect').getBoundingClientRect().top;
 
-    let count = -100,
+    let DYNAMIC_LIMIT_TRANSFORMATION = -100,
         transitionInterval;
+
+    const UPPER_LIMIT_TRANSFORMATION = 100,
+        LOWER_LIMIT_TRANSFORMATION = -100;
 
     const elementReturn = (i) => {
         const arr = [heightService, heightPortfolio, heightCalc, heightCommand, heightConnect];
@@ -21,9 +24,9 @@ const toggleMenu = () => {
 
     const animationTransition = () => {
         transitionInterval = requestAnimationFrame(animationTransition);
-        count < 100 ? (
-            count += 5,
-            menu.style.transform = `translate(${count}%)`
+        DYNAMIC_LIMIT_TRANSFORMATION < UPPER_LIMIT_TRANSFORMATION ? (
+            DYNAMIC_LIMIT_TRANSFORMATION += 5,
+            menu.style.transform = `translate(${DYNAMIC_LIMIT_TRANSFORMATION}%)`
         ) : (
             cancelAnimationFrame(transitionInterval)
         )
@@ -31,12 +34,12 @@ const toggleMenu = () => {
     };
     const HandlerMenu = () => {
         if (screen.width > '768') {
-            count === -100 ? (
+            DYNAMIC_LIMIT_TRANSFORMATION === LOWER_LIMIT_TRANSFORMATION ? (
                 requestAnimationFrame(animationTransition)
             ) : (
                 cancelAnimationFrame(transitionInterval),
                 menu.style.transform = `translate(-100%)`,
-                count = -100
+                DYNAMIC_LIMIT_TRANSFORMATION = LOWER_LIMIT_TRANSFORMATION
             )
         }
     };
@@ -83,7 +86,7 @@ const toggleMenu = () => {
         menuItems.forEach((item, i) => {
             if (target === item.querySelector('a')) {
                 animationListener(elementReturn(i));
-                count = 100;
+                DYNAMIC_LIMIT_TRANSFORMATION = UPPER_LIMIT_TRANSFORMATION;
                 HandlerMenu();
             } else if (menu.style.transform === `translate(100%)`) {
                 HandlerMenu();

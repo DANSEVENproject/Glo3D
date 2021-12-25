@@ -3,6 +3,9 @@ const countTimer = () => {
         timerMinutes = document.querySelector('#timer-minutes'),
         timerSeconds = document.querySelector('#timer-seconds');
 
+    const LIMIT_HOURS = 24,
+        MIN_TWODIGIT_NUMBER = 10;
+
     const arrMonth = (i) => {
         const arr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sen', 'oct', 'nov', 'dec'];
         return arr[i];
@@ -18,14 +21,14 @@ const countTimer = () => {
             minutes = Math.floor((timeRemaining / 60) % 60),
             hours = Math.floor(timeRemaining / 60 / 60);
 
-        while (hours >= 24) {
-            hours = Math.floor(hours % 24);
+        while (hours >= LIMIT_HOURS) {
+            hours = Math.floor(hours % LIMIT_HOURS);
         }
         return { timeRemaining, hours, minutes, seconds };
     }
 
     const conversionDate = (elem) => {
-        if (elem < 10) {
+        if (elem < MIN_TWODIGIT_NUMBER) {
             return '0' + elem;
         } else {
             return elem;
