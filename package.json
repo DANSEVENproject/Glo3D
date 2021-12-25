@@ -1,0 +1,40 @@
+{
+    "name": "glo3d",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack-dev-server --open --mode=development",
+        "build": "webpack --mode=production"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/DANSEVENproject/Glo3D.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/DANSEVENproject/Glo3D/issues"
+    },
+    "homepage": "https://github.com/DANSEVENproject/Glo3D#readme",
+    "devDependencies": {
+        "@babel/core": "^7.16.5",
+        "@babel/preset-env": "^7.16.5",
+        "babel-loader": "^8.2.3",
+        "path": "^0.12.7",
+        "webpack": "^5.65.0",
+        "webpack-cli": "^4.9.1",
+        "webpack-dev-server": "^4.7.1"
+    },
+    "dependencies": {
+        "@babel/polyfill": "^7.12.1",
+        "element-closest": "^3.0.2",
+        "element-closest-polyfill": "^1.0.4",
+        "element-matches-polyfill": "^1.0.0",
+        "fetch-polyfill": "^0.8.2",
+        "formdata-polyfill": "^4.0.10",
+        "nodelist-foreach-polyfill": "^1.2.0",
+        "promise-polyfill": "^8.2.1"
+    }
+}
